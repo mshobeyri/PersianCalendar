@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>PersianCalendar.qml</file>
+        <file>PersianCalendarStyle.qml</file>
+        <file>images/leftanglearrow.png</file>
+        <file>images/rightanglearrow.png</file>
+    </qresource>
+</RCC>
