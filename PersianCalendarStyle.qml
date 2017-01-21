@@ -625,7 +625,7 @@ Style {
                             hoveredCellIndex = -1;
                         }
                         property int selectedCellIndex: -1
-                        function onDateChangedOverride(indexOfCell,date)
+                        function onDateChangedOverride(indexOfCell,date,isPress)
                         {
                             var gn = false
                             var gp = false
@@ -639,7 +639,6 @@ Style {
                                 {
                                     gn = true
                                 }
-                                selectedCellIndex = indexOfCell
                             }
                             var jalali = gregorian_to_jalali(
                                         parseInt(visibleYear),
@@ -655,22 +654,36 @@ Style {
                                         jalali[0],
                                         jalali[1]);
 
+
                             var jp = false
                             var jn = false
 
-                            console.log(dN,indexOfCell)
                             if(dN > indexOfCell)
+                            {
                                 jp = true;
-                            if(dN + dIM <= indexOfCell)
+                            }
+                            else if(dN + dIM <= indexOfCell)
+                            {
                                 jn = true
+                            }
+                            else
+                            {
+                                control.selectedDate = date;
+                                pressedCellIndex = indexOfCell;
+                                if(gp) showPreviousMonth()
+                                if(gn) showNextMonth()
+                            }
 
-                            control.selectedDate = date;
-
-                            if(gp)showPreviousMonth();
-                            if(gn)showNextMonth();
-
-                            if(jp)showPreviousMonth();
-                            if(jn)showNextMonth();
+                            if(isPress)
+                            {
+                                if(jn)showNextMonth()
+                                if(jp)showPreviousMonth()
+                            }
+                            selectedCellIndex = indexOfCell
+                            var jdate  = jalali_to_gregorian(jalali[0],jalali[1],indexOfCell - dN + 1)
+                            persianDate = jdate
+                            persianGregorianSelectedDate
+                                    = new Date(jdate[0], jdate[1] - 1, jdate[2])
 
                         }
 
@@ -689,13 +702,14 @@ Style {
                                         control.pressed(date);
 
                                         // You can't select dates in a different month while dragging.
-                                        if (date.getMonth() === control.selectedDate.getMonth()) {
-                                            if(isPersianMode)
-                                            {
-                                                onDateChangedOverride(indexOfCell,date)
-                                            }
-                                            else
-                                                control.selectedDate = date;
+                                        //                                        if (date.getMonth() === control.selectedDate.getMonth()) {
+                                        if(isPersianMode)
+                                        {
+                                            onDateChangedOverride(indexOfCell,date,false)
+                                        }
+                                        else if (date.getMonth() === control.selectedDate.getMonth())
+                                        {
+                                            control.selectedDate = date;
                                             pressedCellIndex = indexOfCell;
                                         }
                                     }
@@ -711,7 +725,7 @@ Style {
                                 if (__isValidDate(date)) {
                                     if(isPersianMode)
                                     {
-                                        onDateChangedOverride(pressCellIndex,date)
+                                        onDateChangedOverride(pressCellIndex,date,true)
                                     }
                                     else
                                         control.selectedDate = date;

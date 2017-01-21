@@ -3,8 +3,12 @@ import QtQuick.Controls 1.4
 
 Calendar{
     property bool isPersianMode: true
-    property var persianSelectedDate: []
+    property date persianGregorianSelectedDate
+    onPersianGregorianSelectedDateChanged: {
+        console.log(persianGregorianSelectedDate)
+    }
 
+    property var  persianDate
 
     function gregorian_to_jalali(gy,gm,gd){
         var g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];
